@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SG Impresiones · Cotizá tu pedido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyan:#00A8E8;
+  --cyan-dark:#0088C2;
+  --cyan-light:#E0F5FD;
+  --cyan-bg:#F0FAFF;
+  --yellow:#FFE600;
+  --yellow-dark:#E6CE00;
+  --dark:#111827;
+  --sub:#4B6B7A;
+  --border:#B8DFF0;
+  --card:#fff;
+  --wa:#25D366;
+  --green:#1E7A3E;
+}
+html{background:var(--cyan-bg)}
+body{
+  font-family:'Barlow',system-ui,-apple-system,sans-serif;
+  background:var(--cyan-bg);color:var(--dark);
+  min-height:100vh;max-width:480px;margin:0 auto
+}
+
+/* ── Header ── */
+.hdr{background:var(--cyan);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:20;
+  box-shadow:0 2px 12px rgba(0,168,232,.35)}
+.hdr-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.5px;
+  text-transform:uppercase;flex:1;display:flex;align-items:center;gap:0}
+.hdr-logo .sg{background:var(--yellow);color:var(--dark);padding:1px 7px;border-radius:4px;margin-right:7px;font-size:18px}
+.hdr-top .step-lbl{font-size:11px;opacity:.85;white-space:nowrap;background:rgba(0,0,0,.15);
+  padding:3px 8px;border-radius:20px;font-weight:600;letter-spacing:.3px}
+.back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px 6px;border-radius:6px;line-height:1}
+.back:hover{background:rgba(0,0,0,.15)}
+.prog{height:4px;background:rgba(0,0,0,.2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--yellow);border-radius:2px;transition:width .35s ease}
+
+/* ── Content ── */
+.content{padding:20px 16px 40px}
+
+/* ── Question ── */
+.q-icon{font-size:36px;margin-bottom:8px;display:block}
+.q-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;
+  color:var(--dark);line-height:1.15;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.q-sub{font-size:13px;color:var(--sub);margin-bottom:20px;font-weight:500}
+
+/* ── Product grid ── */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prod-btn{
+  background:var(--card);border:2px solid var(--border);border-radius:14px;
+  padding:14px 10px;text-align:center;cursor:pointer;
+  font-size:12.5px;font-weight:700;color:var(--dark);font-family:'Barlow',sans-serif;
+  transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px;
+  min-height:84px;justify-content:center;line-height:1.3
+}
+.prod-btn .e{font-size:26px;line-height:1}
+.prod-btn:hover,.prod-btn:active{border-color:var(--cyan);background:var(--cyan-light);color:var(--cyan-dark)}
+
+/* ── Option list ── */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt-btn{
+  background:var(--card);border:2px solid var(--border);border-radius:12px;
+  padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;
+  font-size:14px;font-weight:600;color:var(--dark);transition:all .15s;text-align:left;
+  font-family:'Barlow',sans-serif
+}
+.opt-btn .opt-txt{flex:1;line-height:1.3}
+.opt-btn .opt-sub{font-size:11.5px;color:var(--sub);font-weight:400;margin-top:3px;display:block;line-height:1.35}
+.opt-btn .opt-code{font-size:10px;color:var(--sub);font-weight:700;font-family:monospace;
+  background:#E8F4FB;border-radius:4px;padding:1px 6px;margin-left:7px;vertical-align:middle;
+  letter-spacing:.5px;border:1px solid var(--border)}
+.opt-btn .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.opt-btn:hover,.opt-btn:active{border-color:var(--cyan);background:var(--cyan-light)}
+.opt-btn.sel{border-color:var(--cyan);background:var(--cyan-light);color:var(--cyan-dark)}
+.opt-btn.sel .chk{background:var(--cyan);border-color:var(--cyan);color:#fff}
+
+/* ── Extra info form ── */
+.field{margin-bottom:18px}
+.field label{display:block;font-size:11.5px;font-weight:700;color:var(--sub);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;font-family:'Barlow Condensed',sans-serif;font-size:13px}
+.field input,.field select{
+  width:100%;border:2px solid var(--border);border-radius:10px;
+  padding:13px 14px;font-size:15px;color:var(--dark);background:var(--card);outline:none;
+  font-family:'Barlow',sans-serif;appearance:none
+}
+.field input:focus,.field select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,168,232,.12)}
+.yn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yn-btn{
+  background:var(--card);border:2px solid var(--border);border-radius:10px;
+  padding:13px;text-align:center;cursor:pointer;font-size:13.5px;font-weight:700;
+  color:var(--dark);transition:all .15s;font-family:'Barlow',sans-serif
+}
+.yn-btn:hover{border-color:var(--cyan);background:var(--cyan-light)}
+.yn-btn.sel{border-color:var(--green);background:#E8F5EE;color:var(--green)}
+
+/* ── Summary ── */
+.sum-card{background:var(--card);border-radius:16px;padding:20px;border:2px solid var(--border);margin-bottom:14px}
+.sum-prod{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;
+  color:var(--dark);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.sum-tag{display:inline-block;background:var(--cyan-light);color:var(--cyan-dark);
+  border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;margin-bottom:16px;
+  border:1px solid var(--border)}
+.sum-rows{display:flex;flex-direction:column;gap:0}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;
+  padding:9px 0;border-bottom:1px solid var(--border);gap:12px}
+.sum-row:last-child{border-bottom:none;padding-bottom:0}
+.sum-k{font-size:12.5px;color:var(--sub);font-weight:600;min-width:110px}
+.sum-v{font-size:13.5px;font-weight:700;text-align:right;color:var(--dark);flex:1}
+.sum-note{font-size:12px;color:var(--sub);text-align:center;margin-bottom:6px}
+
+/* ── Buttons ── */
+.btn-primary{
+  background:var(--cyan);color:#fff;border:none;border-radius:12px;
+  padding:16px;width:100%;font-size:16px;font-weight:800;cursor:pointer;
+  margin-top:20px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;
+  letter-spacing:.8px;transition:background .15s
+}
+.btn-primary:hover{background:var(--cyan-dark)}
+.btn-primary:disabled{background:#aaa;cursor:not-allowed}
+.btn-wa{
+  background:var(--wa);color:#fff;border:none;border-radius:12px;
+  padding:16px;width:100%;font-size:16px;font-weight:800;cursor:pointer;
+  margin-top:12px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;
+  letter-spacing:.8px;display:flex;align-items:center;justify-content:center;gap:8px;
+  text-decoration:none;transition:background .15s
+}
+.btn-wa:hover{background:#1eba56}
+.btn-human{
+  background:transparent;color:var(--cyan-dark);border:2px solid var(--cyan);
+  border-radius:12px;padding:13px;width:100%;font-size:14px;font-weight:700;cursor:pointer;
+  margin-top:8px;font-family:'Barlow',sans-serif;display:flex;align-items:center;
+  justify-content:center;gap:8px;text-decoration:none;transition:all .15s
+}
+.btn-human:hover{background:var(--cyan-light)}
+
+/* ── Welcome ── */
+.welcome{background:var(--cyan);min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 24px;text-align:center;position:relative;overflow:hidden}
+.welcome::before{content:'SG';position:absolute;font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:340px;color:rgba(0,0,0,.08);top:-60px;right:-40px;line-height:1;
+  user-select:none;pointer-events:none}
+.welcome-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
+  color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:40px;
+  display:flex;align-items:center;gap:10px}
+.welcome-logo .sg-box{background:var(--yellow);color:var(--dark);padding:4px 12px;border-radius:6px;font-size:24px}
+.welcome h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;
+  color:#fff;text-transform:uppercase;letter-spacing:.5px;line-height:1.05;margin-bottom:8px}
+.welcome h2 .hl{background:var(--yellow);color:var(--dark);padding:0 8px;display:inline-block;
+  border-radius:4px;margin-top:4px}
+.welcome p{color:rgba(255,255,255,.85);font-size:15px;line-height:1.5;margin-bottom:36px;max-width:300px}
+.btn-start{
+  background:var(--yellow);color:var(--dark);border:none;border-radius:14px;
+  padding:18px 36px;font-size:18px;font-weight:900;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:1px;
+  display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.2)
+}
+.btn-start:hover{background:var(--yellow-dark)}
+.footer-note{font-size:12.5px;color:rgba(255,255,255,.7);text-align:center;margin-top:18px;line-height:1.6}
+.footer-note a{color:#fff;font-weight:700;text-decoration:none}
+.divider{height:1px;background:var(--border);margin:12px 0}
+
+/* ── Animation ── */
+.fade{animation:fd .2s ease}
+@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Scroll product list ── */
+.scroll-hint{font-size:12px;color:var(--sub);text-align:center;padding:8px 0 0}
+
+/* ── Summary product icon strip ── */
+.sum-header{background:var(--cyan);border-radius:12px;padding:16px 20px;margin-bottom:14px;
+  display:flex;align-items:center;gap:14px}
+.sum-header .sh-icon{font-size:32px}
+.sum-header .sh-prod{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;
+  color:#fff;text-transform:uppercase;letter-spacing:.5px}
+.sum-header .sh-sub{font-size:12px;color:rgba(255,255,255,.8);font-weight:500}
+/* ── Arte info box ── */
+.arte-box{background:#FFFBEA;border:2px solid var(--yellow-dark);border-radius:14px;padding:16px;margin-top:12px}
+.arte-box-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#7A5800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.arte-formats{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.arte-fmt{display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #FFD966}
+.arte-fmt-tag{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;background:var(--dark);color:#fff;border-radius:6px;padding:2px 8px;white-space:nowrap;flex-shrink:0}
+.arte-fmt-tag.best{background:var(--cyan)}
+.arte-fmt-txt{font-size:13px;color:var(--dark);line-height:1.45}
+.arte-fmt-txt strong{font-weight:700}
+.dpi-box{background:var(--cyan-light);border-radius:10px;padding:10px 12px;font-size:12.5px;color:#005070;line-height:1.6}
+.dpi-box strong{font-weight:700}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIG  ← Alejandro: reemplazá el número con el de SG (código de país sin +)
+// ─────────────────────────────────────────────────────────────────────────────
+const WA_NUMBER  = '5493815535008';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxjUlWC--6vaVY7MV8d6zIdr6qlem-Erd_Yf1ROcJduy2rX5yX_CWediN5LWzEPB9dxIQ/exec';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATOS (extraídos del Excel de especificaciones)
+// ─────────────────────────────────────────────────────────────────────────────
+const PRODUCTS = {
+  "Afiche":{"Papel":["Obra 80 gr.","Ilustración 115 gr.","Opalina 90 gr."],"Tamaño":["A4","A3"],"Tintas":["4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"]},
+  "Anillado":{"Papel":["Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A5 (15x21 cm)","A4","A3"],"Tintas":["1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal"],"Encuadernacion":["Anillado"]},
+  "Banner":{"Papel":["Lonafront"],"Tamaño":["190 cm x 90 cm"],"Tintas":["4/0"],"Doblado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["Con estructura","Sin estructura"]},
+  "Carpetas":{"Papel":["Ilustración 350 gr.","Opalina 240 gr."],"Tamaño":["Pliego (32x47 cm)"],"Tintas":["4/0","4/4"],"Doblado":["Díptico"],"Laminado":["Mate","Brillante","Soft Touch"],"Corte y Troquel":["Solapa blanca","Solapa color"]},
+  "Carpetas con Solapa":{"Papel":["Ilustración 350 gr.","Opalina 240 gr."],"Tamaño":["Pliego (32x47 cm)"],"Tintas":["4/0","4/4"],"Doblado":["Hendido"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal","Solapa blanca","Solapa color"]},
+  "Carpitas":{"Papel":["Ilustración 350 gr."],"Tamaño":["A6 / Volante (10x15 cm)","A5 (15x21 cm)"],"Tintas":["4/0"],"Doblado":["Hendido"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal"],"Encuadernacion":["Cinta Doble Faz"]},
+  "Folletos":{"Papel":["Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)","Medio A3 (15x42 cm)","A4"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No","Díptico","Tríptico","Hendido"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal"],"Encuadernacion":["No"]},
+  "Fotografía":{"Papel":["Canson High Resolution 180 gr.","Photo Glossy 180 gr.","Canson Foto Satin 240 gr.","Canvas Poliéster 180 gr.","Canson Canvas Algodón 385 gr.","Canson Algodón 310 gr."],"Tamaño":["A6 / Volante (10x15 cm)","A5 (15x21 cm)","A4","A3","A2","A1","A0","Ancho de rollo"],"Tintas":["4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["Montado en FOAM"]},
+  "Hoja Membretada":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Opalina 90 gr."],"Tamaño":["A4"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["No"]},
+  "Hoja Suelta":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Kraft","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr.","Sticker autoadhesivo","SYMAP 300 gr (plástico)","Sticker craft","OPP Holográfico","OPP Plateado","OPP Transparente","OPP Blanco","OPP Dorado"],"Tamaño":["A4","A3","Pliego (32x47 cm)","31x65 cm"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["Mate","Brillante","Soft Touch","Plastificado"],"Corte y Troquel":["No"],"Encuadernacion":["No"]},
+  "Libro":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Kraft","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A5 (15x21 cm)","A4","A3"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["No"],"Encuadernacion":["Binder Abrochado","Binder Engomado"]},
+  "Planos":{"Papel":["Bond 90 gr.","Vegetal","Film poliéster"],"Tamaño":["A4","A3","A2","A1","A0","Ancho de rollo"],"Tintas":["4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["No"]},
+  "Recetarios":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Opalina 90 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","A4"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["Engomado"]},
+  "Revistas":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Kraft","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","A5 (15x21 cm)","Medio A3 (15x42 cm)","A4","A3"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["Hendido"],"Laminado":["Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal"],"Encuadernacion":["Abrochado a caballo"]},
+  "Sobres":{"Papel":["Obra 80 gr.","Opalina 90 gr.","Bond 90 gr."],"Tamaño":["Sobre oficio inglés","Sobre bolsa A4","Sobre bolsa oficio"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["No"],"Encuadernacion":["No"]},
+  "Stickers":{"Papel":["Sticker autoadhesivo","Sticker craft","OPP Holográfico","OPP Plateado","OPP Transparente","OPP Blanco","OPP Dorado"],"Tamaño":["Tarjeta (5x8,5 cm)","A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","A4","A3","Pliego (32x47 cm)"],"Tintas":["1/0","4/0"],"Laminado":["No"],"Corte y Troquel":["No","Normal","Con forma","Medio corte con forma","Precorte"]},
+  "Talonarios":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Opalina 90 gr."],"Tamaño":["A6 / Volante (10x15 cm)","A5 (15x21 cm)","A4"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal","Troquelado"],"Encuadernacion":["Abrochado"]},
+  "Tarjetas Personales":{"Papel":["Ilustración 350 gr.","Opalina 240 gr."],"Tamaño":["Tarjeta (5x8,5 cm)"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal","Con forma"],"Encuadernacion":["No"]},
+  "Vinilos":{"Papel":["Vinilo Blanco Mate","Vinilo Transparente","OPP Holográfico rollo","Vinilo Esmerilado"],"Tamaño":["Tarjeta (5x8,5 cm)","A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)","Medio A3 (15x42 cm)","A4","A3","Pliego (32x47 cm)","A2","A1","A0","Ancho de rollo"],"Tintas":["4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["No","Con forma","Medio corte con forma"],"Encuadernacion":["No"]},
+  "Volantes":{"Papel":["Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["No"],"Encuadernacion":["No"]},
+  "Menú":{"Papel":["Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Kraft","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)","Medio A3 (15x42 cm)","A4","A3","Pliego (32x47 cm)"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No","Díptico","Tríptico","Hendido"],"Laminado":["No","Mate","Brillante","Soft Touch","Plastificado"],"Corte y Troquel":["Normal","Con forma","Puntas redondas","Perforación normal","Tapa dura"],"Encuadernacion":["Abrochado a caballo","Anillado"]},
+  "Etiquetas":{"Papel":["Ilustración 350 gr.","Opalina 240 gr.","Sticker autoadhesivo","Sticker craft","OPP Holográfico","OPP Plateado","OPP Transparente","OPP Blanco","OPP Dorado","Vinilo Blanco Mate","Vinilo Transparente","OPP Holográfico rollo","Vinilo Esmerilado"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal","Con forma","Medio corte con forma"],"Encuadernacion":["No"]},
+  "Fotolibro Ap. 180°":{"Tamaño":["A4","Pliego (32x47 cm)","31x65 cm"],"Tintas":["4/4"],"Laminado":["Mate","Brillante","Soft Touch"],"Encuadernacion":["Fotolibro 180°"]},
+  "Entradas":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Ilustración 115 gr.","Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Opalina 90 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["Tarjeta (5x8,5 cm)","A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal","Troquelado"],"Encuadernacion":["Engomado","Abrochado"]},
+  "Láminas":{"Papel":["Bond 90 gr.","Vegetal","Film poliéster","Canson High Resolution 140 gr.","Canson High Resolution 180 gr.","Photo Glossy 180 gr.","Canson Foto Satin 240 gr.","Canvas Poliéster 180 gr.","Canson Canvas Algodón 385 gr.","Canson Algodón 310 gr.","Lonafront"],"Tamaño":["A2","A1","A0","Ancho de rollo"],"Tintas":["4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal"],"Encuadernacion":["No"]},
+  "Tarjetones":{"Papel":["Ilustración 250 gr.","Ilustración 350 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)","A4"],"Tintas":["1/0","1/1","4/0","4/1","4/4"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal"],"Encuadernacion":["No"]},
+  "Credenciales":{"Papel":["Ilustración 250 gr.","Ilustración 350 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","Tercio de A4 (10x21 cm)","A5 (15x21 cm)"],"Tintas":["1/0","1/1","4/0","4/1"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"]},
+  "Individuales":{"Papel":["Reciclado 80 gr.","Obra 80 gr.","Opalina 90 gr.","Opalina 150 gr."],"Tamaño":["A4","A3","Pliego (32x47 cm)"],"Tintas":["1/0","4/0"],"Doblado":["No"],"Laminado":["No"],"Corte y Troquel":["Normal","Con forma"],"Encuadernacion":["No"]},
+  "Calendario":{"Papel":["Ilustración 170 gr.","Ilustración 250 gr.","Ilustración 350 gr.","Opalina 150 gr.","Opalina 240 gr."],"Tamaño":["A6 / Volante (10x15 cm)","A5 (15x21 cm)","Medio A4 (29,7x10,5 cm)","Medio A3 (15x42 cm)","A4"],"Doblado":["No"],"Laminado":["No","Mate","Brillante","Soft Touch"],"Corte y Troquel":["Normal","Tapa dura"],"Encuadernacion":["Anillado"]},
+  "Imán":{"Papel":["Imán"],"Tintas":["4/0"],"Laminado":["No"],"Corte y Troquel":["Normal","Con forma"],"Encuadernacion":["No"]},
+  "Otros":{}
+};
+
+const ICONS = {
+  "Afiche":"🖼️","Anillado":"📚","Banner":"🚩","Carpetas":"📁","Carpetas con Solapa":"📂",
+  "Carpitas":"📋","Folletos":"📰","Fotografía":"📷","Hoja Membretada":"📝","Hoja Suelta":"📄",
+  "Libro":"📖","Planos":"📏","Recetarios":"🗒️","Revistas":"📔","Sobres":"✉️",
+  "Stickers":"🏷️","Talonarios":"🧾","Tarjetas Personales":"💳","Vinilos":"🎨","Volantes":"📬",
+  "Menú":"🍽️","Etiquetas":"🔖","Fotolibro Ap. 180°":"📸","Entradas":"🎟️","Láminas":"🖼️",
+  "Tarjetones":"📮","Credenciales":"🪪","Individuales":"🍽️","Calendario":"📅","Imán":"🧲","Otros":"❓"
+};
+
+const ATTR_META = {
+  "Papel":       {icon:"📄", q:"¿Sobre qué material?",   hint:"Tipo de papel o soporte"},
+  "Tamaño":      {icon:"📐", q:"¿Qué tamaño necesitás?", hint:""},
+  "Tintas":      {icon:"🖨️", q:"¿Cómo va la impresión?", hint:""},
+  "Doblado":     {icon:"📂", q:"¿Con doblado?",           hint:""},
+  "Laminado":    {icon:"✨", q:"¿Qué terminación?",        hint:"Laminado o acabado superficial"},
+  "Corte y Troquel":{icon:"✂️", q:"¿Cómo va el corte?", hint:""},
+  "Encuadernacion":{icon:"📎", q:"¿Cómo va armado?",      hint:"Encuadernación o montaje final"}
+};
+
+const TINTAS = {
+  "1/0":["Blanco y Negro · Una cara",         "1/0"],
+  "1/1":["Blanco y Negro · Dos caras",         "1/1"],
+  "4/0":["Full Color · Una cara",              "4/0"],
+  "4/1":["Full Color adelante · B&N atrás",    "4/1"],
+  "4/4":["Full Color · Dos caras",             "4/4"]
+};
+
+const PAPEL_DESC = {
+  // Papeles offset / obra
+  "Reciclado 80 gr.":       "Papel reciclado, económico. Para borradores o material interno.",
+  "Obra 80 gr.":            "El papel de impresora de siempre. Para textos y documentos simples.",
+  "Bond 90 gr.":            "Papel técnico semitransparente, usado para planos.",
+  "Vegetal":                "Papel translúcido para planos arquitectónicos o técnicos.",
+  "Film poliéster":         "Material transparente y muy resistente, para planos de alta durabilidad.",
+  "Kraft":                  "Papel madera natural, aspecto artesanal y rústico.",
+  // Ilustración (satinados)
+  "Ilustración 115 gr.":    "Satinado liviano. Bueno para folletos y volantes básicos.",
+  "Ilustración 170 gr.":    "Satinado medio. Ideal para folletos, dípticos y catálogos.",
+  "Ilustración 250 gr.":    "Cartulina satinada firme. Para tapas y materiales de larga vida.",
+  "Ilustración 350 gr.":    "Cartulina gruesa tipo tarjeta, la más resistente del grupo.",
+  // Opalina
+  "Opalina 90 gr.":         "Blanco puro, liso. Excelente reproducción de colores.",
+  "Opalina 150 gr.":        "Opalina más gruesa, calidad premium para trabajos especiales.",
+  "Opalina 240 gr.":        "Cartulina opalina resistente. Ideal para tarjetas y carpetas.",
+  // Foto / arte
+  "Canson High Resolution 140 gr.": "Papel fotográfico mate de alta resolución para láminas y arte.",
+  "Canson High Resolution 180 gr.": "Igual al anterior pero más grueso. Mejor para marcos.",
+  "Photo Glossy 180 gr.":   "Fotográfico brillante. Colores vibrantes y saturados.",
+  "Canson Foto Satin 240 gr.": "Satinado fotográfico premium. Sin reflejos molestos.",
+  "Canvas Poliéster 180 gr.": "Tela tipo lienzo. Aspecto de cuadro, ideal para decoración.",
+  "Canson Canvas Algodón 385 gr.": "Lienzo de algodón de máxima calidad para arte o fotografía.",
+  "Canson Algodón 310 gr.": "Papel algodón artístico, reproducción de coloración excelente.",
+  "Lonafront":              "Material para banners y carteles. Resistente al sol y la lluvia.",
+  // Stickers / autoadhesivos
+  "Sticker autoadhesivo":   "Se pega sobre cualquier superficie. Ideal para etiquetas.",
+  "Sticker (Papel autoadhesivo)": "Se pega sobre cualquier superficie. Ideal para etiquetas.",
+  "Sticker craft":          "Autoadhesivo con look natural/artesanal.",
+  "Sticker papel craft":    "Autoadhesivo con look natural/artesanal.",
+  "OPP Holográfico":        "Efecto holográfico multicolor muy llamativo.",
+  "OPP Holográfico rollo":  "Igual al holográfico, en formato de rollo continuo.",
+  "OPP Plateado":           "Acabado metálico plateado, moderno y elegante.",
+  "OPP Transparente":       "Transparente, deja ver lo que hay debajo.",
+  "OPP Blanco":             "Material sintético blanco, muy resistente a la humedad.",
+  "OPP Dorado":             "Acabado metálico dorado, ideal para algo exclusivo.",
+  // Vinilos
+  "Vinilo Blanco Mate":     "Autoadhesivo blanco para rotulación e identidad visual.",
+  "Vinilo Transparente":    "Autoadhesivo transparente, se mimetiza con la superficie.",
+  "Vinilo Esmerilado":      "Efecto vidrio esmerilado, aspecto sofisticado y premium.",
+  // Plástico / especiales
+  "SYMAP 300 gr (plástico)":"Material plástico rígido, resistente al agua.",
+  "Imán":                   "Material magnético, se adhiere a superficies metálicas."
+};
+
+const DOBLADO_DESC = {
+  "No":       "Sin doblado, sale como una hoja suelta.",
+  "Díptico":  "Un doblez por la mitad → queda en 2 caras. El folleto clásico.",
+  "Tríptico": "Dos dobleces → 3 paneles. Muy usado para folletos con mucha info.",
+  "Hendido":  "Se marca una línea de doblez sin cortar, para que cartulinas gruesas doblen sin quebrarse."
+};
+
+const LAMINADO_DESC = {
+  "No":          "Sin laminado, el papel queda tal cual.",
+  "Mate":        "Acabado opaco, sin reflejos. Aspecto sobrio y elegante.",
+  "Brillante":   "Acabado brilloso. Colores más vibrantes. El más pedido.",
+  "Soft Touch":  "Mate aterciopelado, muy suave al tacto. Sensación premium.",
+  "Plastificado":"Capa plástica gruesa para máxima protección y rigidez."
+};
+
+const CORTE_DESC = {
+  "No":                   "Sin corte especial, borde recto estándar.",
+  "Normal":               "Corte recto estándar.",
+  "Con forma":            "Corte en una forma especial (se define con el equipo al ver el archivo).",
+  "Medio corte con forma":"Corta el material pero no el papel de respaldo — ideal para vinilos y stickers donde despegás la figura sin cortar la hoja entera.",
+  "Puntas redondas":      "Esquinas redondeadas en lugar de ángulo recto.",
+  "Troquelado":           "Corte con forma fija usando un troquel especial.",
+  "Precorte":             "Líneas de corte marcadas para que el cliente pueda separar las piezas.",
+  "Perforación normal":   "Agujeros estándar para carpeta o archivo.",
+  "Perforación con taladro":"Agujeros realizados con taladro para encuadernación especial.",
+  "Solapa blanca":        "Para carpetas: la solapa interior es blanca.",
+  "Solapa color":         "Para carpetas: la solapa interior es del mismo color que la tapa.",
+  "Tapa dura":            "Tapa rígida para mayor resistencia."
+};
+
+const ENCUAD_DESC = {
+  "No":                   "Sin encuadernación.",
+  "Abrochado a caballo":  "Grapado al lomo, como una revista. Para cuadernillos de pocas páginas.",
+  "Anillado":             "Espiral de plástico o metal. El documento queda completamente plano al abrirse.",
+  "Binder Abrochado":     "Encuadernación tipo libro con grapas en el lomo interior. Para documentos con muchas páginas.",
+  "Binder Engomado":      "Encuadernación tipo libro con pegamento en el lomo, como un libro de librería.",
+  "Engomado":             "Hojas unidas con cola en el lomo. Clásico de talonarios y recetarios.",
+  "Abrochado":            "Grapado simple en esquina o margen.",
+  "Fotolibro 180°":       "Encuadernación especial que permite abrir el libro completamente plano.",
+  "Montado en FOAM":      "Pegado sobre plancha de foam (espuma rígida) para presentación y rigidez.",
+  "Montado en PVC":       "Pegado sobre plancha de PVC rígida.",
+  "Con estructura":       "Con soporte de pie incluido (típico en banners vela).",
+  "Sin estructura":       "Solo el material impreso, sin soporte.",
+  "Sin Estuctura":        "Solo el material impreso, sin soporte.",
+  "Cinta Doble Faz":      "Adhesivo doble faz en el lomo para unir y cerrar las piezas.",
+  "Con bolsillo (Para banner sin estructura)": "Con bolsillo inferior para colocar el soporte.",
+  "Cinta Doble Faz":      "Adhesivo doble faz en el lomo para unir y cerrar las piezas."
+};
+
+const TAMAÑO_DESC = {
+  "Tarjeta (5x8,5 cm)":            "Del tamaño de una tarjeta de crédito.",
+  "A6 / Volante (10x15 cm)":       "Mitad de una hoja A5. Tamaño clásico de volante.",
+  "Tercio de A4 (10x21 cm)":       "Como un billete largo. Ideal para flyers y dípticos.",
+  "A5 (15x21 cm)":                 "La mitad de una hoja A4.",
+  "Medio A4 (29,7x10,5 cm)":       "Un A4 partido a lo largo, formato horizontal.",
+  "Medio A3 (15x42 cm)":           "La mitad de un A3. Buen tamaño para menús.",
+  "A4":                            "El tamaño de una hoja de carpeta. El más común.",
+  "A3":                            "El doble de un A4. Ideal para afiches y pósters.",
+  "Pliego (32x47 cm)":             "Más grande que un A3. Para carpetas y trabajos especiales.",
+  "31 x 65 - (Pliego Extendido)":  "Formato especial largo, usado para fotolibros.",
+  "31x65 cm":                      "Formato especial largo, usado para fotolibros.",
+  "A2":                            "Cuatro veces un A4. Para afiches grandes.",
+  "A1":                            "El doble de un A2. Para carteles y láminas grandes.",
+  "A0":                            "El más grande. El doble de un A1. Para mapas y carteles.",
+  "Ancho de rollo":                "Impresión continua de gran formato (rollos de 24\" a 44\").",
+  "Ancho de rollo (24\", 36\", 42\" y 44\")": "Impresión continua de gran formato.",
+  "190 cm x 90 cm":                "Tamaño estándar de banner de pie (vela doble).",
+  "190 cm x 90 cm (Tamaño banner doble vela)": "Tamaño estándar de banner de pie.",
+  "Sobre oficio inglés":           "Sobre estándar para cartas comerciales.",
+  "Sobre bolsa A4":                "Sobre grande para documentos A4.",
+  "Sobre bolsa oficio":            "Sobre para documentos tamaño oficio.",
+  "sobre oficio ingles":           "Sobre estándar para cartas comerciales.",
+  "sobre bolsa A4":                "Sobre grande para documentos A4.",
+  "Sobre bolsa oficio":            "Sobre para documentos tamaño oficio."
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+const S = {
+  screen:'welcome',
+  product:null,
+  steps:[],      // [{key, options}] — only attrs with >1 option
+  autoSel:{},    // attrs auto-selected (single option)
+  stepIdx:0,
+  sel:{},        // manual selections
+  extra:{nombre:'',cantidad:'',tieneArte:null,fecha:''}
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LOGIC
+// ─────────────────────────────────────────────────────────────────────────────
+function buildSteps(prod) {
+  const data = PRODUCTS[prod] || {};
+  const auto = {}, steps = [];
+  for (const [k, opts] of Object.entries(data)) {
+    const filtered = opts.filter(o => o !== 'No' || opts.length > 1);
+    if (opts.length === 0) continue;
+    if (opts.length === 1) { auto[k] = opts[0]; continue; }
+    // if all are "No" or single choice after filter, auto
+    steps.push({key:k, options:opts});
+  }
+  return {auto, steps};
+}
+
+function displayVal(key, val) {
+  if (key === 'Tintas' && TINTAS[val]) return `${TINTAS[val][0]} (${TINTAS[val][1]})`;
+  return val;
+}
+
+function getOptSub(key, val) {
+  if (key === 'Tintas')          return null; // handled inline
+  if (key === 'Papel')           return PAPEL_DESC[val]   || null;
+  if (key === 'Tamaño')          return TAMAÑO_DESC[val]  || null;
+  if (key === 'Doblado')         return DOBLADO_DESC[val] || null;
+  if (key === 'Laminado')        return LAMINADO_DESC[val]|| null;
+  if (key === 'Corte y Troquel') return CORTE_DESC[val]   || null;
+  if (key === 'Encuadernacion')  return ENCUAD_DESC[val]  || null;
+  return null;
+}
+
+function totalSteps() { return S.steps.length + 2; } // +2 for product + extra
+function currentProgress() {
+  if (S.screen === 'welcome') return 0;
+  if (S.screen === 'product') return 5;
+  if (S.screen === 'spec') return 10 + Math.round(((S.stepIdx+1)/totalSteps())*75);
+  if (S.screen === 'extra') return 88;
+  return 100;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GOOGLE SHEETS LOGGING
+// ─────────────────────────────────────────────────────────────────────────────
+function logToSheets() {
+  if (!SHEETS_URL || SHEETS_URL === 'PEGAR_URL_DEL_SCRIPT_ACÁ') return;
+  const allSel = {...S.autoSel, ...S.sel};
+  const data = {
+    nombre: S.extra.nombre, producto: S.product,
+    papel: allSel['Papel']||'', tamano: allSel['Tamaño']||'',
+    tintas: allSel['Tintas'] ? (TINTAS[allSel['Tintas']] ? TINTAS[allSel['Tintas']][0] : allSel['Tintas']) : '',
+    doblado: allSel['Doblado']||'', laminado: allSel['Laminado']||'',
+    corte: allSel['Corte y Troquel']||'', encuadernacion: allSel['Encuadernacion']||'',
+    cantidad: S.extra.cantidad,
+    arte: S.extra.tieneArte === null ? '' : S.extra.tieneArte ? 'Entrega arte' : 'Necesita diseño',
+    fecha: S.extra.fecha,
+  };
+  fetch(SHEETS_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}).catch(()=>{});
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+const app = document.getElementById('app');
+function render() {
+  app.innerHTML = '';
+  app.className = 'fade';
+  if (S.screen === 'welcome') renderWelcome();
+  else if (S.screen === 'product') renderProduct();
+  else if (S.screen === 'spec') renderSpec();
+  else if (S.screen === 'extra') renderExtra();
+  else if (S.screen === 'summary') renderSummary();
+}
+
+// ── Header helper ──────────────────────────────────────────────────────────
+function renderHeader(title, stepLabel, showBack) {
+  const prog = currentProgress();
+  const hdr = document.createElement('div');
+  hdr.className = 'hdr';
+  hdr.innerHTML = `
+    <div class="hdr-top">
+      ${showBack ? '<button class="back" id="backBtn">&#8249;</button>' : ''}
+      <div class="hdr-logo"><span class="sg">SG</span> Impresiones</div>
+      ${stepLabel ? `<span class="step-lbl">${stepLabel}</span>` : ''}
+    </div>
+    <div class="prog"><div class="prog-fill" style="width:${prog}%"></div></div>
+  `;
+  app.appendChild(hdr);
+  if (showBack) hdr.querySelector('#backBtn').onclick = goBack;
+}
+
+// ── Welcome ────────────────────────────────────────────────────────────────
+function renderWelcome() {
+  app.innerHTML = `
+    <div class="welcome fade">
+      <div class="welcome-logo"><span class="sg-box">SG</span> Impresiones</div>
+      <h2>COTIZÁ<br>TU <span class="hl">PEDIDO</span></h2>
+      <p>Respondé algunas preguntas y te armamos el detalle de tu trabajo. Menos de 2 minutos.</p>
+      <button class="btn-start" onclick="startFlow()">EMPEZAR →</button>
+      <div class="footer-note">¿Preferís hablar con alguien?<br><a href="https://wa.me/${WA_NUMBER}">Escribinos por WhatsApp</a></div>
+    </div>
+  `;
+}
+
+// ── Product selection ──────────────────────────────────────────────────────
+function renderProduct() {
+  renderHeader('¿Qué necesitás?', '', false);
+  const c = document.createElement('div');
+  c.className = 'content fade';
+  c.innerHTML = `
+    <span class="q-icon">🖨️</span>
+    <div class="q-title">¿Qué tipo de trabajo es?</div>
+    <div class="q-sub">Elegí el producto más cercano a lo que necesitás</div>
+    <div class="prod-grid" id="prodGrid"></div>
+    <div class="scroll-hint">↓ Deslizá para ver todos los productos</div>
+  `;
+  app.appendChild(c);
+  const grid = c.querySelector('#prodGrid');
+  Object.keys(PRODUCTS).forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'prod-btn';
+    btn.innerHTML = `<span class="e">${ICONS[name]||'📄'}</span>${name}`;
+    btn.onclick = () => selectProduct(name);
+    grid.appendChild(btn);
+  });
+}
+
+// ── Spec step ─────────────────────────────────────────────────────────────
+function renderSpec() {
+  const step = S.steps[S.stepIdx];
+  const meta = ATTR_META[step.key] || {icon:'❓', q:step.key, hint:''};
+  const total = S.steps.length;
+  renderHeader(S.product, `${S.stepIdx+1} de ${total}`, true);
+  const c = document.createElement('div');
+  c.className = 'content fade';
+  c.innerHTML = `
+    <span class="q-icon">${meta.icon}</span>
+    <div class="q-title">${meta.q}</div>
+    ${meta.hint ? `<div class="q-sub">${meta.hint}</div>` : '<div style="height:16px"></div>'}
+    <div class="opts" id="optsList"></div>
+  `;
+  app.appendChild(c);
+  const list = c.querySelector('#optsList');
+  const curSel = S.sel[step.key];
+  step.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (curSel === opt ? ' sel' : '');
+    let mainLabel, subLabel, techCode;
+    if (step.key === 'Tintas' && TINTAS[opt]) {
+      mainLabel = TINTAS[opt][0];
+      techCode  = TINTAS[opt][1];
+      subLabel  = null;
+    } else {
+      mainLabel = opt;
+      techCode  = null;
+      subLabel  = getOptSub(step.key, opt);
+    }
+    btn.innerHTML = `
+      <div class="opt-txt">
+        ${mainLabel}
+        ${techCode  ? `<span class="opt-code">${techCode}</span>` : ''}
+        ${subLabel  ? `<span class="opt-sub">${subLabel}</span>` : ''}
+      </div>
+      <div class="chk">${curSel === opt ? '✓' : ''}</div>
+    `;
+    btn.onclick = () => selectOpt(step.key, opt);
+    list.appendChild(btn);
+  });
+  // "No sé" option
+  const noSeBtn = document.createElement('button');
+  noSeBtn.className = 'opt-btn' + (curSel === 'No sé / Consultar' ? ' sel' : '');
+  noSeBtn.innerHTML = `<div class="opt-txt">No sé / Consultar con el equipo<span class="opt-sub">Un asesor te va a ayudar</span></div><div class="chk">${curSel === 'No sé / Consultar' ? '✓' : ''}</div>`;
+  noSeBtn.onclick = () => selectOpt(step.key, 'No sé / Consultar');
+  list.appendChild(noSeBtn);
+}
+
+// ── Extra info ────────────────────────────────────────────────────────────
+function renderExtra() {
+  renderHeader(S.product, 'Último paso', true);
+  const c = document.createElement('div');
+  c.className = 'content fade';
+  c.innerHTML = `
+    <span class="q-icon">📋</span>
+    <div class="q-title">Un poco más de info</div>
+    <div class="q-sub">Para armar el presupuesto lo más completo posible</div>
+
+    <div class="field">
+      <label>Tu nombre</label>
+      <input type="text" id="inp-nombre" placeholder="Ej: Lucía Gómez" value="${S.extra.nombre}" />
+    </div>
+    <div class="field">
+      <label>¿Cuántas unidades necesitás?</label>
+      <input type="number" id="inp-cant" placeholder="Ej: 500" value="${S.extra.cantidad}" min="1" />
+    </div>
+    <div class="field">
+      <label>¿Tenés el arte / diseño listo?</label>
+      <div class="yn-row">
+        <button class="yn-btn${S.extra.tieneArte===true?' sel':''}" id="yn-si" onclick="setArte(true)">✅ Sí, lo tengo</button>
+        <button class="yn-btn${S.extra.tieneArte===false?' sel':''}" id="yn-no" onclick="setArte(false)">🎨 Necesito diseño</button>
+      </div>
+      <div id="arte-section" style="display:${S.extra.tieneArte===true?'block':'none'}">
+        <div class="arte-box">
+          <div class="arte-box-title">📎 ¿Cómo mandar tu arte?</div>
+          <div class="arte-formats">
+            <div class="arte-fmt"><span class="arte-fmt-tag best">PDF</span><div class="arte-fmt-txt"><strong>La mejor opción.</strong> Siempre funciona, conserva fuentes y colores exactos.</div></div>
+            <div class="arte-fmt"><span class="arte-fmt-tag">JPG · PNG</span><div class="arte-fmt-txt">Aceptado si tiene <strong>300 DPI o más</strong> de resolución. Ver explicación abajo 👇</div></div>
+          </div>
+          <div class="dpi-box"><strong>¿Qué son los DPI?</strong> Es la calidad de la imagen. Si se ve borrosa cuando la ampliás en pantalla, probablemente no alcance para imprimir bien.<br><br>📱 <strong>En el celular:</strong> una imagen de 3 MB o más generalmente está bien.<br>💻 <strong>En la compu:</strong> clic derecho → Propiedades → Detalles → buscá "resolución". Tiene que decir 300 ppp o más.</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>¿Para cuándo lo necesitás? <span style="font-weight:400;text-transform:none">(opcional)</span></label>
+      <input type="date" id="inp-fecha" value="${S.extra.fecha}" />
+    </div>
+
+    <button class="btn-primary" id="btn-continuar" onclick="goToSummary()">Ver resumen →</button>
+  `;
+  app.appendChild(c);
+  // save on input
+  c.querySelector('#inp-nombre').oninput = e => S.extra.nombre = e.target.value;
+  c.querySelector('#inp-cant').oninput = e => S.extra.cantidad = e.target.value;
+  c.querySelector('#inp-fecha').oninput = e => S.extra.fecha = e.target.value;
+}
+
+// ── Summary ───────────────────────────────────────────────────────────────
+function renderSummary() {
+  renderHeader('Resumen', '', true);
+  const c = document.createElement('div');
+  c.className = 'content fade';
+
+  // Build all selections
+  const allSel = {...S.autoSel, ...S.sel};
+
+  // Build summary rows HTML
+  let rows = '';
+  const ATTR_ORDER = ['Papel','Tamaño','Tintas','Doblado','Laminado','Corte y Troquel','Encuadernacion'];
+  ATTR_ORDER.forEach(k => {
+    const v = allSel[k];
+    if (!v) return;
+    const label = k === 'Encuadernacion' ? 'Encuadernación' : k;
+    rows += `<div class="sum-row"><span class="sum-k">${label}</span><span class="sum-v">${displayVal(k,v)}</span></div>`;
+  });
+  if (S.extra.cantidad) rows += `<div class="sum-row"><span class="sum-k">Cantidad</span><span class="sum-v">${S.extra.cantidad} unidades</span></div>`;
+  if (S.extra.tieneArte !== null) rows += `<div class="sum-row"><span class="sum-k">Arte/Diseño</span><span class="sum-v">${S.extra.tieneArte ? 'Cliente entrega arte' : 'Necesita diseño'}</span></div>`;
+  if (S.extra.fecha) {
+    const d = new Date(S.extra.fecha+'T12:00:00');
+    rows += `<div class="sum-row"><span class="sum-k">Fecha necesaria</span><span class="sum-v">${d.toLocaleDateString('es-AR',{day:'numeric',month:'long',year:'numeric'})}</span></div>`;
+  }
+
+  // Build WA message
+  const msg = buildWAMessage(allSel);
+  const waLink = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+  c.innerHTML = `
+    <div class="sum-header">
+      <span class="sh-icon">${ICONS[S.product]||'📄'}</span>
+      <div><div class="sh-prod">${S.product}</div>
+      ${S.extra.nombre ? `<div class="sh-sub">Para: ${S.extra.nombre}</div>` : '<div class="sh-sub">Tu pedido está listo 🎉</div>'}</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-rows">${rows}</div>
+    </div>
+    <div class="sum-note">Enviá este detalle por WhatsApp y te respondemos con el presupuesto 🚀</div>
+    <a class="btn-wa" href="${waLink}" target="_blank" onclick="logToSheets()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Enviar por WhatsApp
+    </a>
+    ${S.extra.tieneArte ? `<div style="background:#FFFBEA;border:1.5px solid #FFD966;border-radius:12px;padding:13px 15px;margin-top:12px;font-size:13.5px;color:#5A4000;line-height:1.55">📎 <strong>Adjuntá tu arte en el mismo chat</strong> que se va a abrir.<br>Formatos aceptados: <strong>PDF</strong> (ideal) · <strong>JPG o PNG</strong> a 300 DPI o más.</div>` : ''}
+    <a class="btn-human" href="https://wa.me/${WA_NUMBER}" target="_blank">
+      👤 Hablar con un asesor
+    </a>
+    <button class="btn-primary" style="background:#eee;color:#444;margin-top:10px;font-weight:600" onclick="restart()">Hacer otra consulta</button>
+  `;
+  app.appendChild(c);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WA MESSAGE
+// ─────────────────────────────────────────────────────────────────────────────
+function buildWAMessage(allSel) {
+  let msg = `¡Hola! Quiero consultar precio para:\n\n`;
+  msg += `*Producto:* ${S.product}\n`;
+  const ATTR_ORDER = ['Papel','Tamaño','Tintas','Doblado','Laminado','Corte y Troquel','Encuadernacion'];
+  ATTR_ORDER.forEach(k => {
+    const v = allSel[k];
+    if (!v) return;
+    const label = k === 'Encuadernacion' ? 'Encuadernación' : k;
+    const display = k === 'Tintas' && TINTAS[v] ? `${TINTAS[v][0]} (${TINTAS[v][1]})` : v;
+    msg += `*${label}:* ${display}\n`;
+  });
+  if (S.extra.cantidad) msg += `*Cantidad:* ${S.extra.cantidad} unidades\n`;
+  if (S.extra.tieneArte !== null) msg += `*Arte:* ${S.extra.tieneArte ? 'Lo mando adjunto en este chat' : 'Necesito diseño'}\n`;
+  if (S.extra.fecha) {
+    const d = new Date(S.extra.fecha+'T12:00:00');
+    msg += `*Lo necesito para:* ${d.toLocaleDateString('es-AR',{day:'numeric',month:'long'})}\n`;
+  }
+  if (S.extra.nombre) msg += `\n_Soy ${S.extra.nombre}_`;
+  return msg;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────────────────────────────────────
+function startFlow() {
+  S.screen = 'product';
+  render();
+}
+
+function selectProduct(name) {
+  S.product = name;
+  S.sel = {};
+  S.stepIdx = 0;
+  const {auto, steps} = buildSteps(name);
+  S.autoSel = auto;
+  S.steps = steps;
+  if (steps.length === 0) {
+    S.screen = 'extra';
+  } else {
+    S.screen = 'spec';
+  }
+  render();
+}
+
+function selectOpt(key, val) {
+  S.sel[key] = val;
+  // auto-advance
+  setTimeout(() => {
+    S.stepIdx++;
+    if (S.stepIdx >= S.steps.length) {
+      S.screen = 'extra';
+    }
+    render();
+  }, 180);
+}
+
+function setArte(val) {
+  S.extra.tieneArte = val;
+  document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById(val ? 'yn-si' : 'yn-no').classList.add('sel');
+  const as = document.getElementById('arte-section');
+  if (as) as.style.display = val ? 'block' : 'none';
+}
+
+function goToSummary() {
+  // save current extra values
+  const n = document.getElementById('inp-nombre');
+  const q = document.getElementById('inp-cant');
+  const f = document.getElementById('inp-fecha');
+  if(n) S.extra.nombre = n.value;
+  if(q) S.extra.cantidad = q.value;
+  if(f) S.extra.fecha = f.value;
+  S.screen = 'summary';
+  render();
+}
+
+function goBack() {
+  if (S.screen === 'spec') {
+    if (S.stepIdx === 0) {
+      S.screen = 'product';
+    } else {
+      S.stepIdx--;
+    }
+  } else if (S.screen === 'extra') {
+    if (S.steps.length === 0) S.screen = 'product';
+    else { S.screen = 'spec'; S.stepIdx = S.steps.length - 1; }
+  } else if (S.screen === 'summary') {
+    S.screen = 'extra';
+  } else if (S.screen === 'product') {
+    S.screen = 'welcome';
+  }
+  render();
+}
+
+function restart() {
+  S.screen = 'welcome';
+  S.product = null;
+  S.steps = [];
+  S.autoSel = {};
+  S.stepIdx = 0;
+  S.sel = {};
+  S.extra = {nombre:'',cantidad:'',tieneArte:null,fecha:''};
+  render();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
